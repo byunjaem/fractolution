@@ -1,0 +1,47 @@
+<script src="processing.min.js"></script>
+<script type="application/processing" data-processing-target="pjs">
+void setup() {
+    size(1500,1000);
+    background(0);
+    strokeWeight(5);
+    stroke(150,10,10,15);
+    fill(0,0,0,6);
+}
+
+var seed=[];
+for(var o=0;o<1000;o++){seed[o]=round(random(1,20));}
+
+var symmetry=7;
+
+var speed=3;
+var x=0;
+var y=0;
+var counter=0;
+var note=0;
+
+void mouseClicked(){background(0);x=0;y=0;}
+
+void draw() {
+    counter++;
+    translate(750,500);
+    pushMatrix();
+    if(x<40*seed[note]){x+=speed;}
+    if(x>40*seed[note]){x-=speed;}
+    if(y<40*seed[note+1]){y+=speed;}
+    if(y>40*seed[note+1]){y-=speed;}
+    for(var i=0;i<6*symmetry;i++){
+        rotate(6.283/symmetry);
+        if(i%symmetry===0){scale(1/2);rotate(3.88);}
+        beginShape();
+        vertex(x,y);
+        bezierVertex(x+30*sin(counter*0.09),y+40*sin(counter*0.09),x+40*cos(counter*0.087),y+30*sin(counter*0.087),x+60*cos(counter*0.02),y+40*sin(counter*0.02));
+        bezierVertex(x+40*sin(counter*0.035),y+30*sin(counter*0.035),x+50*cos(counter*0.035),y+30*sin(counter*2),x+60*cos(counter*0.035),y+50*sin(counter*0.035));
+        endShape();
+    }
+    popMatrix();
+    if(counter%20===0){noStroke();rect(-750,-500,1500,1000);/*stroke(255-10*abs(seed[note]-seed[note+1]),110,255,15);*//*stroke(85*(cos(counter/500)+2),170*(cos(counter/500-2.094)+0.5),170*(cos(counter/500-4.189)+0.5),15);*/stroke(170*(cos(counter/500)+0.5),160+80*cos(counter/500-2.094),255,15);}
+    if(abs(40*seed[note]-x)<3 && abs(40*seed[note+1]-y)<3){note++;/*speed=round(abs(seed[note+1]-seed[note-1])/5);*/}
+    if(counter===998){note=0;for(var o=0;o<1000;o++){seed[o]=round(random(1,20));}/*symmetry=1+round(random(1,5)*2)*/}
+};
+</script>
+<canvas id="pjs"> </canvas>
